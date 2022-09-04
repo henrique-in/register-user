@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards ,Request  } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport/dist/auth.guard';
 import { LocalAuthGuard } from '../guard/local-auth.guard';
 import { CreateAuthDto } from '../dto/create-auth.dto';
@@ -18,5 +18,11 @@ export class AuthController {
   create(@Request() req, @Body() createAuthDto: CreateAuthDto) {
     // return req.user ;
     return this.authService.login(req.user) ;
+  }
+
+  @Get('verifyToken')
+  @ApiBearerAuth('access-token')
+  getMe(): string{
+    return 'Success'
   }
 }
