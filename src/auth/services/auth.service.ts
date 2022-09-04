@@ -4,31 +4,28 @@ import { UsersService } from '../../users/services/users.service';
 import { CreateAuthDto } from '../dto/create-auth.dto';
 import { UpdateAuthDto } from '../dto/update-auth.dto';
 import * as bcrypt from 'bcrypt'
+import { UserEntity } from 'src/users/entities/user.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 @ApiTags('Auth')
 export class AuthService {
 
-  constructor(private usersService: UsersService) {}
-  
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
-  }
+  constructor(
+    private usersService: UsersService, 
+    private readonly jwtService: JwtService) {}
 
-  findAll() {
-    return `This action returns all auth`;
-  }
+  login(user: UserEntity) {
+    const payload = {
+      id:user.id,
+      name:user.name,
+      email:user.email
+    } 
+    const jwtToken = this.jwtService.sign(payload)
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
+    return {
+      access_token: jwtToken
+    }
   }
 
   async validateUser(email: string, password: string): Promise<any> {

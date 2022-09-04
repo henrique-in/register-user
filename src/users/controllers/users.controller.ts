@@ -5,16 +5,19 @@ import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../entities/user.entity';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { IsPublic } from '../../auth/decorators/is-public.decorator';
 
 @Controller('users')
 @ApiTags('Users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @IsPublic()
   @Post()
   async create(@Body() createUserDto: CreateUserDto): Promise<UserEntity> {
     return await this.usersService.create(createUserDto);
   }
+
 
   @Get()
   async findAll():Promise<UserEntity[]> {
@@ -22,23 +25,19 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id') id: number) {
     return this.usersService.findOne(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: number) {
     return this.usersService.remove(+id);
   }
 
-  // @UseGuards(AuthGuard('local'))
-  // @Post('auth/login')
-  // async login(@Request() req) {
-  //   return req.user;
-  // }
+
 }
