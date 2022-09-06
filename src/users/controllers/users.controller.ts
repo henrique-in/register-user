@@ -34,7 +34,7 @@ export class UsersController {
   @Patch(':id')
   @ApiBearerAuth('access-token')
   update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
